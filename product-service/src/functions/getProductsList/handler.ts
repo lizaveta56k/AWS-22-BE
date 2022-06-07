@@ -1,8 +1,7 @@
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-// import { Product } from "models/Product";
 
-import productList from "../../data/products.json";
+import productList from "@data/products.json";
 
 const getProductsList = async () => {
     return formatJSONResponse({
