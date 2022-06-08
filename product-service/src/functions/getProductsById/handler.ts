@@ -15,7 +15,7 @@ const getProductsById = async (event) => {
     let selectedProduct = products.find(x => x.id.toLowerCase() === productId?.toLowerCase());
 
     if (!selectedProduct) {
-        return formatJSONResponse({ error: `No product with ID ${productId}`, statusCode: 404 });
+        return formatJSONResponse({ error: `Product not found`, statusCode: 404 });
     }
 
     return formatJSONResponse(selectedProduct);
