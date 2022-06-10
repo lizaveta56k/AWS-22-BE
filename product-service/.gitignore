@@ -9,3 +9,5 @@ coverage
 
 # esbuild directories
 .esbuild
+
+.webpack
