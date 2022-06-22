@@ -5,17 +5,13 @@ import { Product } from "@models/Product";
 
 import schema from './schema';
 
-import { create } from "@db/products";
-import { createStock } from "@db/stocks";
+import { createWithStock } from "@db/products";
 
 const createProduct: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
     console.log(event);
-    var createProductResult = await create(event.body.title, event.body.description, event.body.price);
-    var newProduct = createProductResult[0] as Product;
 
-    if (newProduct && newProduct.id && event?.body?.count > 0) {
-        await createStock(newProduct.id, event.body.count)
-    }
+    const createProductResult = await createWithStock(event.body.title, event.body.description, event.body.price, event.body.count);
+    const newProduct = createProductResult.rows[0] as Product;
 
     return formatJSONResponse(newProduct);
 };

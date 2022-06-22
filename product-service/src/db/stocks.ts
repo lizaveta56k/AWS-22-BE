@@ -20,3 +20,10 @@ export const createStock = async (product_id, count) => {
     
         return rows;
 }
+
+export const deleteById = async (product_id) => {
+    const { rows } = await
+        query(`delete from stocks where product_id='${product_id}' RETURNING *;`);
+
+    return rows;
+}

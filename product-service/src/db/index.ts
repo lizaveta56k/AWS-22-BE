@@ -7,7 +7,7 @@ const PGDATABASE = process.env.PGDATABASE;
 const PGPASSWORD = process.env.PGPASSWORD;
 const PGPORT = parseInt(process.env.PGPORT, 10);
 
-const pool = new pg.Pool({
+export const pool = new pg.Pool({
     user: PGUSER,
     host: PGHOST,
     database: PGDATABASE,
@@ -32,23 +32,3 @@ export const query = async (q) => {
     }
     return res
 }
-
-// module.exports.handle = async (event, context, callback) => {
-//     try {
-//         const { rows } = await query("SELECT CONCAT(first_name,' ', last_name) AS \"Full Name\" FROM actor LIMIT 10")
-//         console.log(JSON.stringify(rows[0]))
-//         var response = {
-//             "statusCode": 200,
-//             "headers": {
-//                 "Content-Type": "application/json"
-//             },
-//             "body": JSON.stringify(rows),
-//             "isBase64Encoded": false
-//         };
-//         callback(null, response);
-//     } catch (err) {
-//         //handling errors
-//         console.log('Database ' + err)
-//         callback(null, 'Database ' + err);
-//     }
-// };
