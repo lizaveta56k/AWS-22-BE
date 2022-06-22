@@ -5,6 +5,7 @@ import { Product } from "@models/Product";
 import { getById } from "@db/products";
 
 const getProductsById = async (event) => {
+    console.log(event);
     const productId = event?.pathParameters?.productId;
     const selectedProduct = await getById(productId) as Product;
 

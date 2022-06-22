@@ -9,6 +9,7 @@ import { create } from "@db/products";
 import { createStock } from "@db/stocks";
 
 const createProduct: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+    console.log(event);
     var createProductResult = await create(event.body.title, event.body.description, event.body.price);
     var newProduct = createProductResult[0] as Product;
 

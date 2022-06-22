@@ -4,7 +4,8 @@ import { Product } from "@models/Product";
 
 import { getExist } from "@db/products";
 
-const getProductsList = async () => {
+const getProductsList = async (event) => {
+    console.log(event);
     const productsDB = await getExist() as Product[];
 
     return formatJSONResponse({
