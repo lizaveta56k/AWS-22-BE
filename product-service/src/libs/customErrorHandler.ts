@@ -1,7 +1,8 @@
+import { formatJSONResponse } from '@libs/api-gateway';
+
 const customErrorHandler = () => {
   const customMiddlewareOnError = async (request) => {
-    console.log('customMiddlewareOnError')
-    console.log(request)
+    request.response = formatJSONResponse({ info: request.error }, 500);
   }
 
   return {

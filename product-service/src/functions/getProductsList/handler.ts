@@ -7,16 +7,11 @@ import { getExist } from "@db/products";
 const getProductsList = async (event) => {
     console.log(event);
 
-    try {
-        const productsDB = await getExist() as Product[];
+    const productsDB = await getExist() as Product[];
 
-        return formatJSONResponse({
-            items: productsDB
-        });
-    }
-    catch (e) {
-        return formatJSONResponse({ info: e }, 500);
-    }
+    return formatJSONResponse({
+        items: productsDB
+    });
 };
 
 export const main = middyfy(getProductsList);

@@ -10,15 +10,10 @@ import { createWithStock } from "@db/products";
 const createProduct: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
     console.log(event);
 
-    try {
-        const createProductResult = await createWithStock(event.body.title, event.body.description, event.body.price, event.body.count);
-        const newProduct = createProductResult.rows[0] as Product;
+    const createProductResult = await createWithStock(event.body.title, event.body.description, event.body.price, event.body.count);
+    const newProduct = createProductResult.rows[0] as Product;
 
-        return formatJSONResponse(newProduct);
-    }
-    catch (e) {
-        return formatJSONResponse({ info: e }, 500);
-    }
+    return formatJSONResponse(newProduct);
 };
 
 
