@@ -5,7 +5,8 @@
   "main": "serverless.ts",
   "scripts": {
     "test": "jest --config=jest.config.test.js",
-    "offlinerun": "serverless offline"
+    "offlinerun": "serverless offline",
+    "deploy": "serverless deploy"
   },
   "engines": {
     "node": ">=14.15.0"

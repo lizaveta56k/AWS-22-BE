@@ -18,3 +18,11 @@ export const getById = async (id) => {
     
         return rows;
 }
+
+export const crateProduct = async (title, description, price) => {
+    const { result } = await 
+        query(`insert into products(title, description, price) 
+        values ('${title}','${description}', ${price});`);
+    
+        return result;
+}
