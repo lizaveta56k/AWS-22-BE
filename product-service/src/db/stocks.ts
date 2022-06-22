@@ -12,3 +12,11 @@ export const getById = async (id) => {
     
         return rows;
 }
+
+export const createStock = async (product_id, count) => {
+    const { rows } = await 
+        query(`insert into stocks(product_id, count) 
+        values ('${product_id}','${count}') RETURNING *;`);
+    
+        return rows;
+}
