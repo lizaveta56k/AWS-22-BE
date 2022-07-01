@@ -2,13 +2,15 @@ import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import { Product } from "@models/Product";
 
-import productsRaw from "@data/products.json";
+import { getExist } from "@db/products";
 
-const getProductsList = async () => {
-    const products = productsRaw as Product[];
+const getProductsList = async (event) => {
+    console.log(event);
+
+    const productsDB = await getExist() as Product[];
 
     return formatJSONResponse({
-        items: products
+        items: productsDB
     });
 };
 

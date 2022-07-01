@@ -6,6 +6,7 @@
       "@libs/*": ["src/libs/*"],
       "@models/*": ["src/models/*"],
       "@data*": ["src/data/*"],
+      "@db*": ["src/db/*"],
     }
   }
 }
