@@ -5,9 +5,9 @@ import {
 } from "@aws-sdk/client-s3";
 import { s3Client } from "./s3Client";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import AWS from 'aws-sdk';
+import csv from 'csv-parser';
 
-const csv = require('csv-parser');
-const AWS = require("aws-sdk");
 var s3 = new AWS.S3({ region: process.env.S3REGION })
 
 // Set parameters
