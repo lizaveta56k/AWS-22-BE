@@ -17,6 +17,7 @@
     "@middy/core": "^2.5.3",
     "@middy/http-json-body-parser": "^2.5.3",
     "aws-sdk": "^2.1167.0",
+    "csv-parser": "^3.0.0",
     "serverless-offline": "^8.8.0",
     "ts-jest": "^28.0.5",
     "ts-loader": "^9.3.1"

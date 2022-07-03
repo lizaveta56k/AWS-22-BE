@@ -1,19 +1,19 @@
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { createSignedUrl } from '@libs/s3Helper';
+import { moveObjectsToParsed, parseCSVFile } from '@libs/s3Helper';
 
 const importFileParser = async (event) => {
     console.log(event);
 
-    const fileName = event?.pathParameters?.name;
-
-    if (!fileName) {
-        return formatJSONResponse({ error: `Please provide fileName`, statusCode: 404 });
+    for (const record of event?.Records) {
+        if (record.s3.object.key.endsWith('.csv')) {
+            await parseCSVFile(record.s3.object.key);
+        }
     }
 
-    const signedUrl = await createSignedUrl(fileName);
+    await moveObjectsToParsed(event?.Records)
 
-    return formatJSONResponse({ signedUrl });
+    return formatJSONResponse(event);
 };
 
 export const main = middyfy(importFileParser);

@@ -16,13 +16,13 @@ const serverlessConfiguration: AWS = {
     },
     iamRoleStatements: [
       { Effect: 'Allow', Action: 's3:ListBucket', Resource: 'arn:aws:s3:::BUCKET' },
-      { Effect: 'Allow', Action: 's3:*', Resource: 'arn:aws:s3:::BUCKET' }
+      { Effect: 'Allow', Action: 's3:*', Resource: 'arn:aws:s3:::BUCKET/*' }
     ],
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
-      S3REGION: 'eu-west-1',
-      S3BUCKETNAME: ''
+      S3REGION: 'us-east-1',
+      S3BUCKETNAME: 'BUCKET'
     },
   },
   // import the function via paths
