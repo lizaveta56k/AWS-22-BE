@@ -23,7 +23,7 @@ const serverlessConfiguration: AWS = {
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
       S3REGION: 'us-east-1',
       S3BUCKETNAME: 'import-service-task5',
-      SQS_URL: 'sqsUrl'
+      SQS_URL: 'import-service-sqs-6'
     },
   },
   resources: {
@@ -32,6 +32,22 @@ const serverlessConfiguration: AWS = {
         Type: 'AWS::SQS::Queue',
         Properties: {
           QueueName: 'import-service-sqs-6'
+        }
+      },
+      SNSTopic: {
+        Type: 'AWS::SNS::Topic',
+        Properties: {
+          TopicName: 'import-service-topic-6'
+        }
+      },
+      SNSSubscription: {
+        Type: 'AWS::SNS::Subscription',
+        Properties: {
+          Endpoint: 'my-email@gmail.com',
+          Protocol: 'email',
+          TopicArn: {
+            Ref: 'SNSTopic'
+          }
         }
       },
     }
