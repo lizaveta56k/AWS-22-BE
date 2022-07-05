@@ -17,6 +17,10 @@ const serverlessConfiguration: AWS = {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
     },
+    iamRoleStatements: [
+      // { Effect: 'Allow', Action: 'sqs:*', Resource: { 'Fn::GetAtt': ['SQSQueue', 'Arn'] } },
+      { Effect: 'Allow', Action: 'sns:*', Resource: { Ref: 'SNSTopic' } },
+    ],
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
@@ -25,8 +29,29 @@ const serverlessConfiguration: AWS = {
       PGDATABASE: 'shop',
       PGUSER: 'lizka',
       PGPASSWORD: '',
-      SQS_URL: 'sqsUrl'
+      SQS_URL: 'import-service-sqs-6',
+      SNS_ARN: { Ref: 'SNSTopic' }
     },
+  },
+  resources: {
+    Resources: {
+      SNSTopic: {
+        Type: 'AWS::SNS::Topic',
+        Properties: {
+          TopicName: 'import-service-topic-6'
+        }
+      },
+      SNSSubscription: {
+        Type: 'AWS::SNS::Subscription',
+        Properties: {
+          Endpoint: 'my-email@gmail.com',
+          Protocol: 'email',
+          TopicArn: {
+            Ref: 'SNSTopic'
+          }
+        }
+      },
+    }
   },
   // import the function via paths
   functions: { getProductsList, getProductsById, createProduct, catalogBatchProcess },

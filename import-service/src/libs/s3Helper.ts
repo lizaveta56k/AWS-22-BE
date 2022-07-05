@@ -63,7 +63,7 @@ export const parseCSVFile = async (fileName) => {
             console.log(results);
         });
 
-    return results;
+    return results.join('');
 }
 
 export const getObject = async (fileName) => {
