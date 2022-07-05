@@ -2,7 +2,8 @@ import type { AWS } from '@serverless/typescript';
 
 import getProductsList from '@functions/getProductsList';
 import getProductsById from '@functions/getProductsById';
-import createProduct from '@functions//createProduct';
+import createProduct from '@functions/createProduct';
+import catalogBatchProcess from '@functions/catalogBatchProcess';
 
 const serverlessConfiguration: AWS = {
   service: 'product-service',
@@ -23,11 +24,12 @@ const serverlessConfiguration: AWS = {
       PGPORT: '5432',
       PGDATABASE: 'shop',
       PGUSER: 'lizka',
-      PGPASSWORD: ''
+      PGPASSWORD: '',
+      SQS_URL: 'sqsUrl'
     },
   },
   // import the function via paths
-  functions: { getProductsList, getProductsById, createProduct },
+  functions: { getProductsList, getProductsById, createProduct, catalogBatchProcess },
   package: { individually: true },
   custom: {
     esbuild: {

@@ -5,7 +5,7 @@ export default {
   events: [
     {
       s3: {
-        bucket: '',
+        bucket: 'import-service-task5',
         event: 's3:ObjectCreated:*',
         rules: [{
           prefix: 'uploaded/',

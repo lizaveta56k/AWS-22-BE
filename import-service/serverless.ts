@@ -15,15 +15,26 @@ const serverlessConfiguration: AWS = {
       shouldStartNameWithService: true,
     },
     iamRoleStatements: [
-      { Effect: 'Allow', Action: 's3:ListBucket', Resource: 'arn:aws:s3:::BUCKET' },
-      { Effect: 'Allow', Action: 's3:*', Resource: 'arn:aws:s3:::BUCKET/*' }
+      { Effect: 'Allow', Action: 's3:ListBucket', Resource: 'arn:aws:s3:::import-service-task5' },
+      { Effect: 'Allow', Action: 's3:*', Resource: 'arn:aws:s3:::import-service-task5/*' }
     ],
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
       S3REGION: 'us-east-1',
-      S3BUCKETNAME: 'BUCKET'
+      S3BUCKETNAME: 'import-service-task5',
+      SQS_URL: 'sqsUrl'
     },
+  },
+  resources: {
+    Resources: {
+      SQSQueue: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName: 'import-service-sqs-6'
+        }
+      },
+    }
   },
   // import the function via paths
   functions: { importProductsFile, importFileParser },
