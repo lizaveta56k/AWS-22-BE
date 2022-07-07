@@ -9,7 +9,9 @@ const importFileParser = async (event) => {
     for (const record of event?.Records) {
         if (record.s3.object.key.endsWith('.csv')) {
             var messages = await parseCSVFile(record.s3.object.key);
-            await sendItemToSQS(messages);
+            console.log(messages);
+
+            messages.map(async (item) => await sendItemToSQS(JSON.stringify(item)));
         }
     }
 

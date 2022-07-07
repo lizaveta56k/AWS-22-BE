@@ -13,7 +13,7 @@ export const pool = new pg.Pool({
     database: PGDATABASE,
     password: PGPASSWORD,
     port: PGPORT,
-})
+});
 
 export const query = async (q) => {
     const client = await pool.connect()

@@ -21,7 +21,7 @@ export const sendItemToSQS = async (message) => {
         };
 
         const data = await sqsClient.send(new SendMessageCommand(params));
-        
+
         console.log("Success, message sent. MessageID:", data.MessageId);
         return data;
     } catch (err) {
