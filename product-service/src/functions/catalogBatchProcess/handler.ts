@@ -19,7 +19,7 @@ const catalogBatchProcess = async (event) => {
 
         newProduct = createProductResult.rows[0] as Product;
 
-        await sendNotificationEmail(JSON.stringify(newProduct));
+        await sendNotificationEmail(JSON.stringify(newProduct), product.price);
     }));
 
     return formatJSONResponse(event);
