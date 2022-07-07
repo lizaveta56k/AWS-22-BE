@@ -10,17 +10,17 @@ const catalogBatchProcess = async (event) => {
 
     const messages = event.Records;
 
-    messages.map(async (item) => {
+    await Promise.all(messages.map(async (item) => {
+        let newProduct = {};
         const product = JSON.parse(item.body);
-
         const createProductResult = await createWithStock(
             product.title, product.description, parseInt(product.price, 10), product.count
         );
 
-        const newProduct = createProductResult.rows[0] as Product;
+        newProduct = createProductResult.rows[0] as Product;
 
-        await sendNotificationEmail(newProduct);
-    })
+        await sendNotificationEmail(JSON.stringify(newProduct));
+    }));
 
     return formatJSONResponse(event);
 };
