@@ -51,22 +51,23 @@ export const moveObjectsToParsed = async (records) => {
     }
 };
 
-export const parseCSVFile = async (fileName) => {
+export const parseCSVFile = async (fileName: string): Promise<Array<Record<string, string>>> => {
     const params = bucketParams(fileName);
     const s3Stream = s3.getObject(params).createReadStream();
     const results = [];
 
-    await s3Stream
-        .pipe(csv())
-        .on('data', (data) => results.push(data))
-        .on('end', () => {
-            console.log(results);
-        });
-
-    return results;
+    return new Promise((resolve, reject) => {
+        s3Stream
+            .pipe(csv())
+            .on('data', (data) => results.push(data))
+            .on('end', () => {
+                resolve(results);
+            })
+            .on('error', reject);
+    });
 }
 
-export const getObject = async (fileName) => {
+export const getObject = async (fileName: string): Promise<string>  => {
     const params = bucketParams(fileName);
     const getObjectCommand = new GetObjectCommand(params);
     let responseDataChunks = [];
