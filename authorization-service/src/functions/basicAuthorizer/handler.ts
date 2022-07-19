@@ -5,14 +5,15 @@ import { generatePolicy } from '@libs/policyHelper';
 const basicAuthorizer = async (event) => {
     console.log(event);
 
-    if (!event.queryStringParameters.token) {
+    if (event['type'] != 'TOKEN') {
         return formatJSONResponse({ response: 'Unautorized' }, 401);
     }
 
     try {
-        const authorizationToken = event.queryStringParameters.token;
+        const authorizationToken = event.authorizationToken;
+        const encodedCreds = authorizationToken.split(' ')[1];
 
-        const buff = Buffer.from(authorizationToken, 'base64');
+        const buff = Buffer.from(encodedCreds, 'base64');
         const plainCreds = buff.toString('utf-8').split(':');
         const username = plainCreds[0];
         const password = plainCreds[1];
@@ -22,9 +23,9 @@ const basicAuthorizer = async (event) => {
 
         const isValidCreds = storedPassword && password == storedPassword;
 
-        const policy = generatePolicy(authorizationToken, event.methodArn, isValidCreds ? 'Allow' : 'Deny');
+        const policy = generatePolicy(encodedCreds, event.methodArn, isValidCreds ? 'Allow' : 'Deny');
 
-        return isValidCreds ? formatJSONResponse(policy) : formatJSONResponse(policy, 403);
+        return policy;
     }
     catch (e) {
         return formatJSONResponse({ response: `Unautorized: ${e.message}` }, 401);

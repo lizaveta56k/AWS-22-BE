@@ -1,4 +1,4 @@
-export const generatePolicy = (principalId: string, resource, effect: string = 'Allow') => {
+export const generatePolicy = (principalId: string, resource: string, effect: string = 'Allow') => {
     return {
         principalId: principalId,
         policyDocument: {
