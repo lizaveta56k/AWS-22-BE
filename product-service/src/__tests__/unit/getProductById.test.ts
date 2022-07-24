@@ -74,7 +74,6 @@ describe('Unit test for getProductsById handler', function () {
                 title: "Nomade Chloe",
                 description: "Nomade by Chloe is a Chypre Floral fragrance for women.",
                 price: 49,
-                image: "https://fimgs.net/photogram/p180/sy/p2/pyyySZ5qqkyuBxdv.jpg",
                 count: 2
             };
 

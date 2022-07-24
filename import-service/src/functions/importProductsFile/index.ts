@@ -8,6 +8,13 @@ export default {
         method: 'get',
         path: 'import/{name}',
         cors: true,
+        authorizer: {
+          name: 'basicAuthorizer',
+          arn: 'arn',
+          resultTtlInSeconds: 0,
+          identitySource: 'method.request.header.Authorization',
+          type: 'token'
+        }
       },
     },
   ],
