@@ -14,13 +14,14 @@ export class AppController {
 
     const recipient = originalUrl.split('/')[1];
     const recipientUrl = process.env[recipient];
-    console.log(recipientUrl)
+
+    console.log(originalUrl.split('/').slice(2).join('/'))
     console.log(authorizationHeader)
 
     if (recipientUrl) {
       const axiosConfig = {
         method: method,
-        url: `${recipientUrl}${originalUrl}`,
+        url: `${recipientUrl}/${originalUrl.split('/').slice(2).join('/')}`,
         headers: {
           ...(authorizationHeader && { Authorization: authorizationHeader })
         },
