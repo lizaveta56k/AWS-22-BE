@@ -51,9 +51,9 @@ export class AppController {
   }
 
   @Get('/*')
-  @Post()
-  @Put()
-  @Delete()
+  @Post('/*')
+  @Put('/*')
+  @Delete('/*')
   allRequests(@Request() req, @Response() res): string {
     return this.processRequest(req,res);
   }

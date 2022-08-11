@@ -8,7 +8,7 @@ export const getAll = async () => {
 }
 
 export const getExist = async () => {
-    const { rows } = await query("select p.id, p.title, p.price, p.description, s.count from products p inner join stocks s on s.product_id=p.id");
+    const { rows } = await query("select p.id, p.title, p.image, p.price, p.description, s.count from products p inner join stocks s on s.product_id=p.id");
 
     return rows;
 }
@@ -22,8 +22,8 @@ export const getById = async (id) => {
 
 export const create = async (title, description, price) => {
     const { rows } = await
-        query(`insert into products(title, description, price) 
-        values ('${title}','${description}', ${price}) RETURNING *;`);
+        query(`insert into products(title, description, price, image) 
+        values ('${title}','${description}', ${price}, 'https://img.icons8.com/ios/500/no-image.png') RETURNING *;`);
 
     return rows;
 }
@@ -41,8 +41,8 @@ export const createWithStock = async (title, description, price, count) => {
     try {
         await client.query('BEGIN')
         try {
-            res = await client.query(`insert into products(title, description, price) 
-                values ('${title}','${description}', ${price}) RETURNING *;`)
+            res = await client.query(`insert into products(title, description, price, image) 
+                values ('${title}','${description}', ${price}, 'https://img.icons8.com/ios/500/no-image.png') RETURNING *;`)
 
             var newProduct = res.rows[0] as Product;
             await client.query(`insert into stocks(product_id, count) 
