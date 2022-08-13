@@ -1,12 +1,23 @@
-import { Controller, Get, Request, Response, Post, Put, Delete } from '@nestjs/common';
-import { AppService } from './app.service';
+import {
+  Controller,
+  Get,
+  Request,
+  CACHE_MANAGER,
+  Response,
+  Post,
+  Put,
+  Delete,
+  Inject
+} from '@nestjs/common';
+import { Cache } from 'cache-manager';
 import axios from 'axios';
+import { Response as ExpressResponse } from 'express';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) { }
+  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) { }
 
-  processRequest(@Request() req, @Response() res): string {
+  async processRequest(@Request() req): Promise<ResponseProxy> {
     const originalUrl = req.originalUrl;
     const method = req.method;
     const body = req.body;
@@ -14,48 +25,94 @@ export class AppController {
 
     const recipient = originalUrl.split('/')[1];
     const recipientUrl = process.env[recipient];
+    const reqUrl = originalUrl.split('/').slice(2).join('/');
 
-    console.log(originalUrl.split('/').slice(2).join('/'))
-    console.log(authorizationHeader)
+    console.log(authorizationHeader);
+    console.log(reqUrl);
 
     if (recipientUrl) {
       const axiosConfig = {
         method: method,
-        url: `${recipientUrl}/${originalUrl.split('/').slice(2).join('/')}`,
+        url: `${recipientUrl}/${reqUrl}`,
         headers: {
           ...(authorizationHeader && { Authorization: authorizationHeader })
         },
         ...(Object.keys(req.body || {}).length > 0 && { data: body })
       };
 
-      axios(axiosConfig).then((response) => {
+      const result: ResponseProxy = await axios(axiosConfig).then((response) => {
         console.log(response);
-        res.json(response.data);
+        return {
+          statusCode: response.status,
+          data: response.data,
+        }
       })
         .catch(error => {
           console.log('Error: ', JSON.stringify(error));
 
           if (error.response) {
             const { status, data } = error.response;
-            res.status(status).json(data);
+            return {
+              statusCode: status,
+              data: data,
+            }
           }
           else {
-            res.status(500).json({ error: error.message });
+            return {
+              statusCode: error.response.status,
+              data: error.response.data,
+            }
           }
-        })
+        });
+
+      return result;
     }
     else {
-      res.status(502).json({ error: 'Cannot process request.' })
+      return {
+        statusCode: 502,
+        data: "Cannot process the request",
+      }
     }
-
-    return res.message;
   }
 
   @Get('/*')
+  async getRequests(@Request() req, @Response() res: ExpressResponse): Promise<void> {
+    const originalUrl = req.originalUrl as string;
+    const base64Url = Buffer.from(originalUrl).toString('base64');
+    const cacheResponseMessage = await this.cacheManager.get(base64Url) as string;
+
+    const cacheableUrls = process.env['cacheable_urls'];
+    const cacheableServices = cacheableUrls?.split(';');
+
+    if (cacheResponseMessage) {
+      console.log("Return from cache!");
+      var cachedResponse = JSON.parse(Buffer.from(cacheResponseMessage, 'base64').toString()) as ResponseProxy;
+
+      res.status(cachedResponse.statusCode).json(cachedResponse.data)
+    }
+    else {
+      console.log("Return from NO cache!");
+      const result = await this.processRequest(req);
+
+      if (res.statusCode === 200 && cacheableServices.indexOf(originalUrl) > -1) {
+        const base64Message = Buffer.from(JSON.stringify(result)).toString('base64');
+        await this.cacheManager.set(base64Url, base64Message, { ttl: 120 });
+      }
+
+      res.status(result.statusCode).json(result.data)
+    }
+  }
+
   @Post('/*')
   @Put('/*')
   @Delete('/*')
-  allRequests(@Request() req, @Response() res): string {
-    return this.processRequest(req,res);
+  async allRequests(@Request() req, @Response() res: ExpressResponse): Promise<void> {
+    const result = await this.processRequest(req);
+    res.status(result.statusCode).json(result.data);
   }
+}
+
+interface ResponseProxy {
+  statusCode: number;
+  data: any;
 }
